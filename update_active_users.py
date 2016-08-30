@@ -24,18 +24,28 @@ def main():
 
 
 def fetch_recent_changes(site, date_from, date_to):
-    result = site.api(
-        'query',
-        list='recentchanges',
-        rctype='edit|new',
-        rcshow='!bot|!anon',
-        rcprop='timestamp|user|title',
-        rclimit=5000,
-        rcdir='newer',
-        rcstart=date_from.strftime('%Y%m%d%H%M%S'),
-        rcend=date_to.strftime('%Y%m%d%H%M%S')
-    )
-    return result['query']['recentchanges']
+    changes = []
+    rccontinue=None
+    while True:
+        result = site.api(
+            'query',
+            list='recentchanges',
+            rctype='edit|new',
+            rcshow='!bot|!anon',
+            rcprop='timestamp|user|title',
+            rclimit=5000,
+            rcdir='newer',
+            rcstart=date_from.strftime('%Y%m%d%H%M%S'),
+            rcend=date_to.strftime('%Y%m%d%H%M%S'),
+            rccontinue=rccontinue,
+        )
+        changes += result['query']['recentchanges']
+        if 'continue' not in result:
+            break
+        else:
+            rccontinue=result['continue']['rccontinue']
+    return changes
+
 
 
 if __name__ == '__main__':
