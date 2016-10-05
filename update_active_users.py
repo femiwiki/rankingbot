@@ -46,7 +46,7 @@ def main():
     template.append('{| class="wikitable"')
     template.append('|-')
     template.append('! 순위 !! 기여자 !! 평균 편집 횟수')
-    for i, (user, score) in enumerate(sorted(scores.items(), key=operator.itemgetter(1), reverse=True)):
+    for i, (user, score) in enumerate(sorted(scores.items(), key=operator.itemgetter(1), reverse=True)[:15]):
         template.append('|-')
         template.append('| %d || [[사용자:%s|%s]] || %.2f' % ((i+1), user, user, score))
     template.append('|}')
