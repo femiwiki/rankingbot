@@ -40,7 +40,6 @@ def main():
             scores[user] = scores[user] * (1 - SMOOTH_FACTOR) + counter[user] * SMOOTH_FACTOR
 
     template = []
-    template.append('== 최근 %d일 통계 ==' % TIME_WINDOW)
     template.append('최근 %d일 동안 일 평균 편집 횟수 기준 최다 기여자 순위입니다. 최근 활동에 가중치를 부여하기 위해 [[지수평활법]](계수 %.2f)으로 계산합니다. ([[페미위키:업적 시스템|업적 시스템]] 참고)' % (TIME_WINDOW, SMOOTH_FACTOR))
 
     template.append('{| class="wikitable"')
