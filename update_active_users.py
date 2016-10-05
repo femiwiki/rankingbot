@@ -47,8 +47,15 @@ def main():
     template.append('|-')
     template.append('! 순위 !! 기여자 !! 평균 편집 횟수')
     for i, (user, score) in enumerate(sorted(scores.items(), key=operator.itemgetter(1), reverse=True)[:15]):
-        template.append('|-')
-        template.append('| %d || [[사용자:%s|%s]] || %.2f' % ((i+1), user, user, score))
+        if i == 0:
+            bg = '#aca6e4'
+            fg = '#FFF'
+        else:
+            bg = 'transparent'
+            fg = 'inherit';
+
+        template.append('|- style="color: %s; background-color: %s"' % (fg, bg))
+        template.append('| style="text-align: right;" | %d || [[사용자:%s|%s]] || style="text-align: right;" | %.2f' % ((i+1), user, user, score))
     template.append('|}')
 
     wiki.save(
