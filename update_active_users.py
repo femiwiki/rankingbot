@@ -42,7 +42,7 @@ def main():
     template = []
     template.append('최근 %d일 동안 일 평균 편집 횟수 기준 최다 기여자 순위입니다. 최근 활동에 가중치를 부여하기 위해 [[지수평활법]](계수 %.2f)으로 계산합니다. ([[페미위키:업적 시스템|업적 시스템]] 참고)' % (TIME_WINDOW, SMOOTH_FACTOR))
 
-    template.append('{| class="wikitable" style="width: 100%"')
+    template.append('{| style="width: 100%"')
     template.append('|-')
     template.append('! 순위 !! 기여자 !! 평균 편집 횟수')
     for i, (user, score) in enumerate(sorted(scores.items(), key=operator.itemgetter(1), reverse=True)[:15]):
