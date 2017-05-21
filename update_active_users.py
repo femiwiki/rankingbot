@@ -35,16 +35,17 @@ def main():
         active_users = set(counter.elements())
         inactive_users = users.difference(active_users)
         for user in active_users:
-            scores[user] = scores[user] * (1 - SMOOTH_FACTOR) + counter[
-                                                                    user] * SMOOTH_FACTOR
+            scores[user] *= (1 - SMOOTH_FACTOR) + counter[user] * SMOOTH_FACTOR
         for user in inactive_users:
-            scores[user] = scores[user] * (1 - SMOOTH_FACTOR) + counter[
-                                                                    user] * SMOOTH_FACTOR
+            scores[user] *= (1 - SMOOTH_FACTOR) + counter[user] * SMOOTH_FACTOR
 
     template = []
     template.append(
-        '최근 %d일 동안 일 평균 편집 횟수 기준 최다 기여자 순위입니다. 최근 활동에 가중치를 부여하기 위해 [[지수평활법]](계수 %.2f)으로 계산합니다. ([[페미위키:업적 시스템|업적 시스템]] 참고)' % (
-        TIME_WINDOW, SMOOTH_FACTOR))
+        '최근 %d일 동안 일 평균 편집 횟수 기준 최다 기여자 순위입니다. 최근 '
+        '활동에 가중치를 부여하기 위해 [[지수평활법]](계수 %.2f)으로 '
+        '계산합니다. ([[페미위키:업적 시스템|업적 시스템]] 참고)' % (
+            TIME_WINDOW, SMOOTH_FACTOR
+        ))
 
     template.append('{| style="width: 100%"')
     template.append('|-')
@@ -59,8 +60,9 @@ def main():
 
         template.append('|- style="background-color: %s"' % bg)
         template.append(
-            '| style="text-align: right;" | %d || [[사용자:%s|%s]] || style="text-align: right;" | %.2f' % (
-            (i + 1), user, user, score))
+            '| style="text-align: right;" | %d '
+            '|| [[사용자:%s|%s]] '
+            '|| style="text-align: right;" | %.2f' % (i + 1, user, user, score))
     template.append('|}')
 
     wiki.save(
@@ -95,7 +97,7 @@ class Wiki:
 
         filename = os.path.join(self._tempdir, date.strftime('%Y%m%d'))
         if not os.path.isfile(filename):
-            entries = self.fetch_recent_changes(date)
+            entries = self._fetch_recent_changes(date)
             with open(filename, 'w') as f:
                 self._to_csv(f, entries, headers)
         with open(filename, 'r') as f:
@@ -105,7 +107,7 @@ class Wiki:
             reader = csv.DictReader(f, headers)
             return [row for row in reader]
 
-    def fetch_recent_changes(self, date):
+    def _fetch_recent_changes(self, date):
         self.login()
 
         changes = []
