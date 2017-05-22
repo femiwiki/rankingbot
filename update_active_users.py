@@ -20,7 +20,7 @@ def main():
     )
 
     today = datetime.today().date()
-    dates = [today - timedelta(days=i) for i in range(TIME_WINDOW, 0, -1)]
+    dates = enumerate_dates(today, TIME_WINDOW)
 
     counters = {}
     for date in dates:
@@ -35,9 +35,12 @@ def main():
         active_users = set(counter.elements())
         inactive_users = users.difference(active_users)
         for user in active_users:
-            scores[user] *= (1 - SMOOTH_FACTOR) + counter[user] * SMOOTH_FACTOR
+            scores[user] = (
+                scores[user] * (1 - SMOOTH_FACTOR) +
+                counter[user] * SMOOTH_FACTOR
+            )
         for user in inactive_users:
-            scores[user] *= (1 - SMOOTH_FACTOR) + counter[user] * SMOOTH_FACTOR
+            scores[user] = scores[user] * (1 - SMOOTH_FACTOR)
 
     template = []
     template.append(
@@ -138,6 +141,18 @@ class Wiki:
         writer.writeheader()
         for entry in entries:
             writer.writerow(entry)
+
+
+def enumerate_dates(today, window):
+    return [today - timedelta(days=i) for i in range(window, 0, -1)]
+
+
+def calc_edit_score(changes):
+    counter = Counter(c['user'] for c in changes)
+    scores = [
+        (user, freq) for user, freq in counter.items()
+    ]
+    return sorted(scores, key=lambda row: row[1], reverse=True)
 
 
 if __name__ == '__main__':
