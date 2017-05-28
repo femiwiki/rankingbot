@@ -1,8 +1,6 @@
 import csv
-import operator
 from collections import Counter
 from datetime import datetime, timedelta
-from itertools import chain
 
 import mwclient as mw
 import os
@@ -12,6 +10,7 @@ SMOOTH_FACTOR = 0.1
 
 
 def main():
+    # Login to wiki
     wiki = Wiki(
         'femiwiki.com',
         '훈장봇',
@@ -19,29 +18,16 @@ def main():
         '/opt/femiwiki/changes'
     )
 
+    # Calculate score
     today = datetime.today().date()
     dates = enumerate_dates(today, TIME_WINDOW)
+    counts_by_dates = [
+        (date, count_for_a_day(wiki.get_recent_changes(date)))
+        for date in dates
+    ]
+    scores = exponential_smoothing(counts_by_dates, SMOOTH_FACTOR)
 
-    counters = {}
-    for date in dates:
-        counters[date] = Counter(
-            sorted(entry['user'] for entry in wiki.get_recent_changes(date))
-        )
-
-    users = set(chain(*[c.elements() for c in counters.values()]))
-    scores = dict(zip(users, [0.0] * len(users)))
-    for date in dates:
-        counter = counters[date]
-        active_users = set(counter.elements())
-        inactive_users = users.difference(active_users)
-        for user in active_users:
-            scores[user] = (
-                scores[user] * (1 - SMOOTH_FACTOR) +
-                counter[user] * SMOOTH_FACTOR
-            )
-        for user in inactive_users:
-            scores[user] = scores[user] * (1 - SMOOTH_FACTOR)
-
+    # Render wikitable
     template = []
     template.append(
         '최근 %d일 동안 일 평균 편집 횟수 기준 최다 기여자 순위입니다. 최근 '
@@ -53,9 +39,7 @@ def main():
     template.append('{| style="width: 100%"')
     template.append('|-')
     template.append('! 순위 !! 기여자 !! 평균 편집 횟수')
-    for i, (user, score) in enumerate(
-            sorted(scores.items(), key=operator.itemgetter(1), reverse=True)[
-            :15]):
+    for i, (score, user) in enumerate(scores[:15]):
         if i == 0:
             bg = '#e1e0f5'
         else:
@@ -68,6 +52,7 @@ def main():
             '|| style="text-align: right;" | %.2f' % (i + 1, user, user, score))
     template.append('|}')
 
+    # Update the page
     wiki.save(
         '페미위키:활동적인 사용자',
         '\n'.join(template),
@@ -147,12 +132,37 @@ def enumerate_dates(today, window):
     return [today - timedelta(days=i) for i in range(window, 0, -1)]
 
 
-def calc_edit_score(changes):
+def count_for_a_day(changes):
     counter = Counter(c['user'] for c in changes)
-    scores = [
+    edits = [
         (user, freq) for user, freq in counter.items()
     ]
-    return sorted(scores, key=lambda row: row[1], reverse=True)
+    return sorted(edits, key=lambda row: row[1], reverse=True)
+
+
+def exponential_smoothing(counts_by_dates, smooth_factor):
+    # Initialize score for all users
+    scores = {}
+    for _, counts in counts_by_dates:
+        scores.update(dict((user, 0) for user, _ in counts))
+
+    # Calculate average count using exponential smoothing
+    all_users = set(scores.keys())
+    for date, counts in counts_by_dates:
+        active_users = set(user for user, _ in counts)
+        inactive_users = all_users.difference(active_users)
+        for user, freq in counts:
+            scores[user] = (
+                scores[user] * (1 - smooth_factor) +
+                freq * smooth_factor
+            )
+        for user in inactive_users:
+            scores[user] = scores[user] * (1 - smooth_factor)
+
+    return sorted(
+        ((score, user) for user, score in scores.items()),
+        reverse=True
+    )
 
 
 if __name__ == '__main__':
