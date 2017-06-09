@@ -90,10 +90,10 @@ class Wiki:
         self._site.login(self._user, self._pw)
         self._loggedin = True
 
-    def load(self, pagename):
+    def load(self, pagename, expand_templates=True):
         self.login()
         page = self._site.pages[pagename]
-        return page.text()
+        return page.text(expandtemplates=expand_templates)
 
     def save(self, pagename, content, summary):
         if self._prevent_save:
