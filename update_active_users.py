@@ -1,4 +1,5 @@
 import csv
+import re
 from collections import Counter
 from datetime import datetime, timedelta
 
@@ -6,16 +7,19 @@ import mwclient as mw
 import os
 
 TIME_WINDOW = 15
+TOP_N = 15
 SMOOTH_FACTOR = 0.1
+PASSWORD = os.environ['BOT_PW']
+DEBUG = os.environ.get('BOT_TEST', '0') == '1'
 
 
 def main():
-    # Login to wiki
     wiki = Wiki(
         'femiwiki.com',
         '훈장봇',
-        os.environ['BOT_PW'],
-        '/opt/femiwiki/changes'
+        PASSWORD,
+        '/opt/femiwiki/changes',
+        DEBUG,
     )
 
     # Calculate score
@@ -25,7 +29,17 @@ def main():
         (date, count_for_a_day(wiki.get_recent_changes(date)))
         for date in dates
     ]
+
+    # Get top rankers
+    p_exclude = r'.*(\[\[분류\:활동적인 사용자 집계에서 제외할 사용자\]\]).*'
+
     scores = exponential_smoothing(counts_by_dates, SMOOTH_FACTOR)
+    scores_to_show = (
+        (score, user) for score, user in scores
+        if not re.match(p_exclude,
+                        wiki.load('사용자:%s' % user),
+                        re.DOTALL + re.MULTILINE)
+    )
 
     # Render wikitable
     template = []
@@ -39,7 +53,7 @@ def main():
     template.append('{| style="width: 100%"')
     template.append('|-')
     template.append('! 순위 !! 기여자 !! 평균 편집 횟수')
-    for i, (score, user) in enumerate(scores[:15]):
+    for i, (score, user) in zip(range(TOP_N), scores_to_show):
         if i == 0:
             bg = '#e1e0f5'
         else:
@@ -61,12 +75,13 @@ def main():
 
 
 class Wiki:
-    def __init__(self, url, user, pw, tempdir):
+    def __init__(self, url, user, pw, tempdir, prevent_save):
         self._site = mw.Site(url)
         self._user = user
         self._pw = pw
         self._tempdir = tempdir
         self._loggedin = False
+        self._prevent_save = prevent_save
 
     def login(self):
         if self._loggedin:
@@ -75,10 +90,21 @@ class Wiki:
         self._site.login(self._user, self._pw)
         self._loggedin = True
 
-    def save(self, pagename, content, summary):
+    def load(self, pagename):
         self.login()
         page = self._site.pages[pagename]
-        page.save(content, summary)
+        return page.text()
+
+    def save(self, pagename, content, summary):
+        if self._prevent_save:
+            print('Updating page: %s' % pagename)
+            print('Summary: %s' % summary)
+            print('Content:\n')
+            print(content)
+        else:
+            self.login()
+            page = self._site.pages[pagename]
+            page.save(content, summary)
 
     def get_recent_changes(self, date):
         headers = ['timestamp', 'user', 'type', 'title']
