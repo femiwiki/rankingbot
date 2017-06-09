@@ -1,7 +1,9 @@
 import csv
+import json
 import re
 from collections import Counter
 from datetime import datetime, timedelta
+from urllib.request import urlopen
 
 import mwclient as mw
 import os
@@ -32,12 +34,13 @@ def main():
 
     # Get top rankers
     p_exclude = r'.*(\[\[분류\:활동적인 사용자 집계에서 제외할 사용자\]\]).*'
+    blocked_users = [row['user'] for row in wiki.get_blocked_accounts()]
 
     scores = exponential_smoothing(counts_by_dates, SMOOTH_FACTOR)
     scores_to_show = (
         (score, user) for score, user in scores
-        if not re.match(p_exclude,
-                        wiki.load('사용자:%s' % user),
+        if user not in blocked_users and
+           not re.match(p_exclude, wiki.load('사용자:%s' % user),
                         re.DOTALL + re.MULTILINE)
     )
 
@@ -76,6 +79,7 @@ def main():
 
 class Wiki:
     def __init__(self, url, user, pw, tempdir, prevent_save):
+        self._url = url
         self._site = mw.Site(url)
         self._user = user
         self._pw = pw
@@ -94,6 +98,13 @@ class Wiki:
         self.login()
         page = self._site.pages[pagename]
         return page.text(expandtemplates=expand_templates)
+
+    def get_blocked_accounts(self):
+        url = 'https://%s/api.php?action=query&list=blocks&bklimit=5000&' \
+              'bkshow=account&format=json' % self._url
+        with urlopen(url) as res:
+            result = json.loads(res.read().decode('utf-8'))
+            return result['query']['blocks']
 
     def save(self, pagename, content, summary):
         if self._prevent_save:
