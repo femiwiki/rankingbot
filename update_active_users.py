@@ -55,18 +55,14 @@ def main():
 
     template.append('{| style="width: 100%"')
     template.append('|-')
-    template.append('! 순위 !! 기여자 !! 평균 편집 횟수')
+    template.append('! 순위 !! 기여자')
     for i, (score, user) in zip(range(TOP_N), scores_to_show):
-        if i == 0:
-            bg = '#e1e0f5'
-        else:
-            bg = 'transparent'
+        bg = 'transparent'
 
         template.append('|- style="background-color: %s"' % bg)
         template.append(
             '| style="text-align: right;" | %d '
-            '|| [[사용자:%s|%s]] '
-            '|| style="text-align: right;" | %.2f' % (i + 1, user, user, score))
+            '|| [[사용자:%s|%s]] ' % (i + 1, user, user))
     template.append('|}')
 
     # Update the page
