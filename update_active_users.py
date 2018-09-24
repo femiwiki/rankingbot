@@ -34,7 +34,7 @@ def main():
 
     # Get top rankers
     p_exclude = r'.*(\[\[분류\:활동적인 사용자 집계에서 제외할 사용자\]\]).*'
-    blocked_users = [row['user'] for row in wiki.get_blocked_accounts()]
+    blocked_users = [row['id'] for row in wiki.get_blocked_accounts()]
 
     scores = exponential_smoothing(counts_by_dates, SMOOTH_FACTOR)
     scores_to_show = (
@@ -58,11 +58,12 @@ def main():
     template.append('! 순위 !! 기여자')
     for i, (score, user) in zip(range(TOP_N), scores_to_show):
         bg = 'transparent'
+        name = wiki.userid_to_name(user)
 
         template.append('|- style="background-color: %s"' % bg)
         template.append(
             '| style="text-align: right;" | %d '
-            '|| [[사용자:%s|%s]] ' % (i + 1, user, user))
+            '|| [[사용자:%s|%s]] ' % (i + 1, name, name))
     template.append('|}')
 
     # Update the page
@@ -119,7 +120,7 @@ class Wiki:
             page.save(content, summary)
 
     def get_recent_changes(self, date):
-        headers = ['timestamp', 'user', 'type', 'title']
+        headers = ['timestamp', 'userid', 'type', 'title']
 
         filename = os.path.join(self._tempdir, date.strftime('%Y%m%d'))
         if not os.path.isfile(filename):
@@ -144,7 +145,7 @@ class Wiki:
                 list='recentchanges',
                 rctype='edit|new',
                 rcshow='!bot|!anon',
-                rcprop='timestamp|user|title',
+                rcprop='timestamp|userid|title',
                 rclimit=5000,
                 rcdir='newer',
                 rcstart=date.strftime('%Y%m%d000000'),
@@ -157,6 +158,14 @@ class Wiki:
             else:
                 rccontinue = result['continue']['rccontinue']
         return changes
+
+    def userid_to_name(self, id):
+        result = self._site.api(
+            'query',
+            list='users',
+            ususerids=id
+        )
+        return result['query']['users'][0]['name']
 
     @staticmethod
     def _to_csv(f, entries, fieldnames):
@@ -171,7 +180,7 @@ def enumerate_dates(today, window):
 
 
 def count_for_a_day(changes):
-    counter = Counter(c['user'] for c in changes)
+    counter = Counter(c['userid'] for c in changes)
     edits = [
         (user, freq) for user, freq in counter.items()
     ]
