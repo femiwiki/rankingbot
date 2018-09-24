@@ -96,11 +96,16 @@ class Wiki:
         return page.text(expandtemplates=expand_templates)
 
     def get_blocked_accounts(self):
-        url = 'https://%s/api.php?action=query&list=blocks&bklimit=5000&' \
-              'bkshow=account&format=json' % self._url
-        with urlopen(url) as res:
-            result = json.loads(res.read().decode('utf-8'))
-            return result['query']['blocks']
+        result = self._site.api(
+            'query',
+            list='blocks',
+            bklimit=5000,
+            bkprop='id',
+            bkshow='account',
+            format = 'json'
+        )
+
+        return result['query']['blocks']
 
     def save(self, pagename, content, summary):
         if self._prevent_save:
