@@ -77,7 +77,7 @@ def main():
 class Wiki:
     def __init__(self, url, user, pw, tempdir, prevent_save):
         self._url = url
-        self._site = mw.Site(url)
+        self._site = mw.Site(url, path='/')
         self._user = user
         self._pw = pw
         self._tempdir = tempdir
