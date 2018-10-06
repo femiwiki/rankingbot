@@ -1,9 +1,7 @@
 import csv
-import json
 import re
 from collections import Counter
 from datetime import datetime, timedelta
-from urllib.request import urlopen
 
 import mwclient as mw
 import os
@@ -39,9 +37,11 @@ def main():
     scores = exponential_smoothing(counts_by_dates, SMOOTH_FACTOR)
     scores_to_show = (
         (score, user) for score, user in scores
-        if user not in blocked_users and
-           not re.match(p_exclude, wiki.load('사용자:%s' % wiki.userid_to_name(user)),
-                        re.DOTALL + re.MULTILINE)
+        if user not in blocked_users and not re.match(
+            p_exclude,
+            wiki.load('사용자:%s' % wiki.userid_to_name(user)),
+            re.DOTALL + re.MULTILINE,
+        )
     )
 
     # Render wikitable
@@ -103,7 +103,7 @@ class Wiki:
             bklimit=5000,
             bkprop='id',
             bkshow='account',
-            format = 'json'
+            format='json',
         )
 
         return result['query']['blocks']
@@ -169,10 +169,10 @@ class Wiki:
 
     @staticmethod
     def _to_csv(f, entries, fieldnames):
-        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
-        writer.writeheader()
+        w = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
+        w.writeheader()
         for entry in entries:
-            writer.writerow(entry)
+            w.writerow(entry)
 
 
 def enumerate_dates(today, window):
