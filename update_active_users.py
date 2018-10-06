@@ -18,7 +18,7 @@ DEBUG = os.environ.get('BOT_TEST', '0') == '1'
 def main():
     wiki = Wiki(
         'femiwiki.com',
-        '훈장봇',
+        '랭킹봇',
         PASSWORD,
         '/opt/femiwiki/changes',
         DEBUG,
