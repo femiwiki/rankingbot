@@ -1,5 +1,5 @@
-[ranking-bot]
-========
+# ranking-bot
+
 A bot that calculates the rankings of users with high contributions and displays
 them on the front page of the [Femiwiki].
 
@@ -11,8 +11,6 @@ pip install -r requirements.txt
 
 BOT_PW='<password here>' python update_active_users.py
 ```
-
-<br>
 
 --------
 
