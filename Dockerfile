@@ -1,4 +1,4 @@
-FROM python:3-stretch
+FROM python:3-slim-stretch
 
 COPY requirements.txt /root/ranking-bot/
 COPY update_ranking.py /srv/ranking-bot/
