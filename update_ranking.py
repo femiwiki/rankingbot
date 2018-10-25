@@ -1,7 +1,7 @@
 import csv
 import re
-from collections import Counter
-from datetime import datetime, timedelta
+import collections
+import datetime
 
 import mwclient as mw
 import os
@@ -18,12 +18,12 @@ def main():
         'femiwiki.com',
         '랭킹봇',
         PASSWORD,
-        '/opt/femiwiki/changes',
+        '/var/ranking-bot',
         DEBUG,
     )
 
     # Calculate score
-    today = datetime.today().date()
+    today = datetime.datetime.today().date()
     dates = enumerate_dates(today, TIME_WINDOW)
     counts_by_dates = [
         (date, count_for_a_day(wiki.get_recent_changes(date)))
@@ -149,7 +149,7 @@ class Wiki:
                 rclimit=5000,
                 rcdir='newer',
                 rcstart=date.strftime('%Y%m%d000000'),
-                rcend=(date + timedelta(days=1)).strftime('%Y%m%d000000'),
+                rcend=(date + datetime.timedelta(days=1)).strftime('%Y%m%d000000'),
                 rccontinue=rccontinue,
             )
             changes += result['query']['recentchanges']
@@ -176,11 +176,11 @@ class Wiki:
 
 
 def enumerate_dates(today, window):
-    return [today - timedelta(days=i) for i in range(window, 0, -1)]
+    return [today - datetime.timedelta(days=i) for i in range(window, 0, -1)]
 
 
 def count_for_a_day(changes):
-    counter = Counter(c['userid'] for c in changes)
+    counter = collections.Counter(c['userid'] for c in changes)
     edits = [
         (user, freq) for user, freq in counter.items()
     ]

@@ -4,12 +4,14 @@ A bot that calculates the rankings of users with high contributions and displays
 them on the front page of the [Femiwiki].
 
 ```bash
-python3 -mvenv .venv
-. .venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
+docker build --tag femiwiki/ranking-bot .
 
-BOT_PW='<password here>' python update_active_users.py
+docker run --detach \
+  --name ranking-bot \
+  --restart always \
+  --volume /var/ranking-bot:/var/ranking-bot:rw \
+  -e "BOT_PW=xxxxxxxx" \
+  femiwiki/ranking-bot
 ```
 
 --------
