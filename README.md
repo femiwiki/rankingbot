@@ -13,6 +13,20 @@ docker run --detach \
 
 &nbsp;
 
+Instructions
+--------
+```bash
+# Setup venv first
+
+pip install -r requirements.txt
+
+export BOT_PW=xxxxxxxx
+python update_ranking.py
+python tests.py
+```
+
+&nbsp;
+
 --------
 
 The source code of *rankingbot* is primarily distributed under the terms of

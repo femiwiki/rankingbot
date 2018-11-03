@@ -1,2 +1,5 @@
 # Python
 /.venv/
+
+# Temporary directory
+/tmp/

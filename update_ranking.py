@@ -1,10 +1,11 @@
+import os
 import csv
 import re
 import collections
 import datetime
+import pathlib
 
-import mwclient as mw
-import os
+import mwclient
 
 TIME_WINDOW = 15
 TOP_N = 15
@@ -18,7 +19,7 @@ def main():
         'femiwiki.com',
         '랭킹봇',
         PASSWORD,
-        '/var/rankingbot',
+        './tmp',
         DEBUG,
     )
 
@@ -77,7 +78,7 @@ def main():
 class Wiki:
     def __init__(self, url, user, pw, tempdir, prevent_save):
         self._url = url
-        self._site = mw.Site(url, path='/')
+        self._site = mwclient.Site(url, path='/')
         self._user = user
         self._pw = pw
         self._tempdir = tempdir
@@ -125,6 +126,7 @@ class Wiki:
         filename = os.path.join(self._tempdir, date.strftime('%Y%m%d'))
         if not os.path.isfile(filename):
             entries = self._fetch_recent_changes(date)
+            pathlib.Path(self._tempdir).mkdir(parents=True, exist_ok=True)
             with open(filename, 'w') as f:
                 self._to_csv(f, entries, headers)
         with open(filename, 'r') as f:

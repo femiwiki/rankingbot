@@ -1,5 +1,8 @@
 # Python
 /.venv/
 
+# Temporary directory
+/tmp/
+
 # Git
 /.git/
