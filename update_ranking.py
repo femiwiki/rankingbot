@@ -4,6 +4,7 @@ import re
 import collections
 import datetime
 import pathlib
+import logging
 
 import mwclient
 
@@ -15,6 +16,10 @@ DEBUG = os.environ.get('BOT_TEST', '0') == '1'
 
 
 def main():
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger('rankingbot')
+    logger.info('Start updating the ranking')
+
     wiki = Wiki(
         'femiwiki.com',
         '랭킹봇',
@@ -73,6 +78,7 @@ def main():
         '\n'.join(template),
         '활동적인 사용자 갱신'
     )
+    logger.info('Ranking update successfully finished')
 
 
 class Wiki:

@@ -1,1 +1,1 @@
-0 6 * * * . /a/env && python /a/update_ranking.py >> /var/log/cron.log 2>&1
+0 6 * * * . /a/env && /usr/local/bin/python /a/update_ranking.py >> /tmp/log 2>&1

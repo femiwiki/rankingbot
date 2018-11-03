@@ -26,5 +26,6 @@ RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
 COPY update_ranking.py .
 
 CMD echo "export RANKINGBOT_PASSWORD='$RANKINGBOT_PASSWORD'" > /a/env &&\
+      touch /tmp/log &&\
       cron &&\
-      sleep infinity
+      tail -f /tmp/log
