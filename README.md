@@ -7,7 +7,6 @@ them on the front page of the [Femiwiki].
 docker run --detach \
   --name rankingbot \
   --restart always \
-  --volume /var/rankingbot:/var/rankingbot:rw \
   -e 'BOT_PW=xxxxxxxx' \
   femiwiki/rankingbot
 ```
