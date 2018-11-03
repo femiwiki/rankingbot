@@ -1,19 +1,19 @@
 FROM python:3-slim-stretch
 
-COPY requirements.txt /root/rankingbot/
-COPY update_ranking.py /srv/rankingbot/
-COPY update_ranking.sh /srv/rankingbot/
+# Install cron
+RUN apt-get update && apt-get -y install cron
 
-COPY crontab /root/rankingbot/
+# Register a cronjob
+COPY crontab .
+RUN crontab crontab && rm crontab
 
-VOLUME /var/rankingbot
+# Install dependencies
+WORKDIR /a
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
 
-RUN /usr/local/bin/python3 -m pip install --no-cache-dir -r /root/rankingbot/requirements.txt \
-    && chmod +x /srv/rankingbot/update_ranking.sh \
-    && apt-get update \
-    && apt-get -y install cron \
-    && crontab /root/rankingbot/crontab \
-    && rm -rf /root/rankingbot
+COPY update_ranking.py .
 
-CMD sed -i s/\$BOT_PW/${BOT_PW}/ /srv/rankingbot/update_ranking.sh \
-    && cron && sleep infinity
+CMD echo "export RANKINGBOT_PASSWORD='$RANKINGBOT_PASSWORD'" > /a/env &&\
+      cron &&\
+      sleep infinity

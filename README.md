@@ -7,7 +7,7 @@ them on the front page of the [Femiwiki].
 docker run --detach \
   --name rankingbot \
   --restart always \
-  -e 'BOT_PW=xxxxxxxx' \
+  -e 'RANKINGBOT_PASSWORD=xxxxxxxx' \
   femiwiki/rankingbot
 ```
 
@@ -20,7 +20,7 @@ Instructions
 
 pip install -r requirements.txt
 
-export BOT_PW=xxxxxxxx
+export RANKINGBOT_PASSWORD=xxxxxxxx
 python update_ranking.py
 python tests.py
 ```

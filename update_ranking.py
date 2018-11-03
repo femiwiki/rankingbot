@@ -10,7 +10,7 @@ import mwclient
 TIME_WINDOW = 15
 TOP_N = 15
 SMOOTH_FACTOR = 0.1
-PASSWORD = os.environ['BOT_PW']
+PASSWORD = os.environ['RANKINGBOT_PASSWORD']
 DEBUG = os.environ.get('BOT_TEST', '0') == '1'
 
 
