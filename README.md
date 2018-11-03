@@ -15,9 +15,8 @@ You have to grant [`(protect)`] permission to the bot.
 
 &nbsp;
 
-Instructions
---------
 Development
+--------
 ```bash
 # Setup venv first
 
