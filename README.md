@@ -17,6 +17,7 @@ You have to grant [`(protect)`] permission to the bot.
 
 Instructions
 --------
+Development
 ```bash
 # Setup venv first
 
@@ -25,6 +26,12 @@ pip install -r requirements.txt
 export RANKINGBOT_PASSWORD=xxxxxxxx
 python update_ranking.py
 python tests.py
+```
+
+Lint
+```bash
+pip install flake8
+flake8
 ```
 
 &nbsp;
