@@ -22,16 +22,23 @@ Development
 # Setup venv first
 
 pip install -r requirements.txt
+pip install --editable .
 
+# Run
 export RANKINGBOT_PASSWORD=xxxxxxxx
-python update_ranking.py
-python tests.py
-```
+python -m rankingbot
 
-Lint
-```bash
+# Test
+pip install pytest
+pytest
+
+# Lint
 pip install flake8
 flake8
+
+# Packaging
+pip install wheel
+python setup.py sdist bdist_wheel
 ```
 
 &nbsp;

@@ -1,4 +1,16 @@
-FROM python:3-slim-stretch
+#
+# Build
+#
+FROM python:3-slim
+WORKDIR /a
+COPY setup.py .
+COPY rankingbot rankingbot
+RUN python setup.py bdist_wheel
+
+#
+# Run
+#
+FROM python:3-slim
 
 # Set timezone
 ENV TZ=Asia/Seoul
@@ -23,7 +35,9 @@ WORKDIR /a
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
 
-COPY update_ranking.py .
+# Install rankingbot
+COPY --from=0 /a/dist/*.whl .
+RUN pip install --no-cache-dir rankingbot-*.whl
 
 CMD echo "export RANKINGBOT_PASSWORD='$RANKINGBOT_PASSWORD'" > /a/env &&\
       touch /tmp/log &&\
