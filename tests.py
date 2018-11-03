@@ -1,8 +1,7 @@
 import unittest
 from datetime import datetime
 
-from update_active_users import enumerate_dates, count_for_a_day, \
-    exponential_smoothing
+from update_ranking import enumerate_dates, count_for_a_day, exponential_smoothing
 
 
 class TestCase(unittest.TestCase):
@@ -20,18 +19,21 @@ class TestCase(unittest.TestCase):
         changes = [
             {
                 'timestamp': '2017-05-08T00:00:00Z',
+                'userid': '1',
                 'user': 'A',
                 'type': 'edit',
                 'title': 'blah'
             },
             {
                 'timestamp': '2017-05-08T00:00:00Z',
+                'userid': '1',
                 'user': 'A',
                 'type': 'edit',
                 'title': 'blah'
             },
             {
                 'timestamp': '2017-05-08T00:00:00Z',
+                'userid': '2',
                 'user': 'B',
                 'type': 'edit',
                 'title': 'blah'
@@ -40,8 +42,8 @@ class TestCase(unittest.TestCase):
 
         actual = count_for_a_day(changes)
         expected = [
-            ('A', 2.0),
-            ('B', 1.0),
+            ('1', 2.0),
+            ('2', 1.0),
         ]
         self.assertEqual(expected, actual)
 
