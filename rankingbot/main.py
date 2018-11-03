@@ -8,7 +8,7 @@ from .wiki import Wiki
 
 logger = logging.getLogger(__name__)
 
-TIME_WINDOW = 15
+TIME_WINDOW = 30
 TOP_N = 15
 SMOOTH_FACTOR = 0.1
 PASSWORD = environ['RANKINGBOT_PASSWORD']
