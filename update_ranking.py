@@ -22,7 +22,7 @@ def main():
 
     wiki = Wiki(
         'femiwiki.com',
-        '랭킹봇',
+        '랭킹봇@랭킹봇',
         PASSWORD,
         './tmp',
         DEBUG,
