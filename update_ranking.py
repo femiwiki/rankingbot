@@ -98,10 +98,10 @@ class Wiki:
         self._site.login(self._user, self._pw)
         self._loggedin = True
 
-    def load(self, pagename, expand_templates=True):
+    def load(self, pagename):
         self.login()
         page = self._site.pages[pagename]
-        return page.text(expandtemplates=expand_templates)
+        return page.text()
 
     def get_blocked_accounts(self):
         result = self._site.api(
