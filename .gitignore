@@ -1,5 +1,8 @@
 # Python
 /.venv/
+/rankingbot.egg-info/
+/build/
+/dist/
 
 # Temporary directory
 /tmp/
