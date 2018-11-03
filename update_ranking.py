@@ -18,7 +18,7 @@ def main():
         'femiwiki.com',
         '랭킹봇',
         PASSWORD,
-        '/var/ranking-bot',
+        '/var/rankingbot',
         DEBUG,
     )
 
