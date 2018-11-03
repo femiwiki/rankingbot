@@ -1,2 +1,5 @@
 # Python
 /.venv/
+
+# Git
+/.git/
