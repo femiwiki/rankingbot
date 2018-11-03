@@ -107,7 +107,7 @@ class Wiki:
         result = self._site.api(
             'query',
             list='blocks',
-            bklimit=5000,
+            bklimit='max',
             bkprop='id',
             bkshow='account',
             format='json',
