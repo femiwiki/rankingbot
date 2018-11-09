@@ -36,7 +36,7 @@ class Wiki:
             'query',
             list='blocks',
             bklimit='max',
-            bkprop='id',
+            bkprop='userid',
             bkshow='account',
             format='json',
         )

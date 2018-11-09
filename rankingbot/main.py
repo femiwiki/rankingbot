@@ -37,12 +37,12 @@ def main():
 
     # Get top rankers
     p_exclude = r'.*(\[\[분류\:활동적인 사용자 집계에서 제외할 사용자\]\]).*'
-    blocked_users = [row['id'] for row in wiki.get_blocked_accounts()]
+    blocked_users = [row['userid'] for row in wiki.get_blocked_accounts()]
 
     scores = exponential_smoothing(counts_by_dates, SMOOTH_FACTOR)
     scores_to_show = (
         (score, user) for score, user in scores
-        if user not in blocked_users and not re.match(
+        if int(user) not in blocked_users and not re.match(
             p_exclude,
             wiki.load('사용자:%s' % wiki.userid_to_name(user)),
             re.DOTALL + re.MULTILINE,
