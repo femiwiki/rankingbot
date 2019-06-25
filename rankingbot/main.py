@@ -52,7 +52,7 @@ def main():
     # Render wikitable
     template = []
 
-    for i, (score, user) in zip(range(TOP_N), scores_to_show):
+    for i, (_, user) in zip(range(TOP_N), scores_to_show):
         name = wiki.userid_to_name(user)
 
         template.append('|-')
