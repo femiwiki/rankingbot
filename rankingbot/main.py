@@ -73,7 +73,7 @@ def main():
 
     # Update the page
     wiki.save(
-        '페미위키:활동적인 사용자',
+        '페미위키:활동적인 사용자/데이터',
         '\n'.join(template),
         '활동적인 사용자 갱신'
     )
