@@ -57,7 +57,7 @@ def main():
 
         template.append('|-')
         template.append(
-            '| %d || [[사용자:%s|%s]] ' % (i + 1, name, name))
+            '| %d || [[특수:기여/사용자:%s|%s]] ' % (i + 1, name, name))
 
     # Update the page
     wiki.save(
