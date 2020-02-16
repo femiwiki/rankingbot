@@ -3,6 +3,8 @@
 /rankingbot.egg-info/
 /build/
 /dist/
+/rankingbot/__pycache__/
+/tests/__pycache__/
 
 # Temporary directory
 /tmp/
