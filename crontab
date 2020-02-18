@@ -1,1 +1,0 @@
-0 6 * * * . /a/env && /usr/local/bin/python -m rankingbot >> /tmp/log 2>&1
