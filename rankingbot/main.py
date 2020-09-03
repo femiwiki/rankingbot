@@ -42,7 +42,7 @@ def main():
     scores = exponential_smoothing(counts_by_dates, SMOOTH_FACTOR)
     scores_to_show = (
         (score, user) for score, user in scores
-        if user is None and int(user) not in blocked_users and not re.match(
+        if user != '' and int(user) not in blocked_users and not re.match(
             p_exclude,
             wiki.load('사용자:%s' % wiki.userid_to_name(user)),
             re.DOTALL + re.MULTILINE,
