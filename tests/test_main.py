@@ -13,6 +13,7 @@ def test_enumerate_dates():
     actual = enumerate_dates(today, 3)
     assert expected == actual
 
+
 def test_count_for_a_day():
     changes = [
         {
@@ -44,6 +45,7 @@ def test_count_for_a_day():
         ('2', 1.0),
     ]
     assert expected == actual
+
 
 def test_exponential_smoothing():
     counts = [

@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 TIME_WINDOW = 30
 TOP_N = 15
 SMOOTH_FACTOR = 0.1
-PASSWORD = environ['RANKINGBOT_PASSWORD']
 DEBUG = environ.get('BOT_TEST', '0') == '1'
+PASSWORD = environ['RANKINGBOT_PASSWORD'] if not DEBUG else ''
 
 
 def main():
@@ -93,8 +93,7 @@ def exponential_smoothing(counts_by_dates, smooth_factor):
         inactive_users = all_users.difference(active_users)
         for user, freq in counts:
             scores[user] = (
-                scores[user] * (1 - smooth_factor) +
-                freq * smooth_factor
+                scores[user] * (1 - smooth_factor) + freq * smooth_factor
             )
         for user in inactive_users:
             scores[user] = scores[user] * (1 - smooth_factor)
