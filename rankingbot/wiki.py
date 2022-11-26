@@ -1,8 +1,9 @@
 import csv
-import pathlib
 import logging
-from os import path
+import pathlib
 from datetime import timedelta
+from os import path
+from time import sleep
 
 import mwclient
 
@@ -94,6 +95,8 @@ class Wiki:
                 break
             else:
                 rccontinue = result['continue']['rccontinue']
+                sleep(5)
+
         return changes
 
     def userid_to_name(self, id):
