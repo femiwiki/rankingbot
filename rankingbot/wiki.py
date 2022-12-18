@@ -3,7 +3,6 @@ import logging
 import pathlib
 from datetime import timedelta
 from os import path
-from time import sleep
 
 import mwclient
 
@@ -95,7 +94,6 @@ class Wiki:
                 break
             else:
                 rccontinue = result['continue']['rccontinue']
-                sleep(5)
 
         return changes
 
