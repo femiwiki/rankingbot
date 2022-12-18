@@ -24,6 +24,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
+    - uses: actions/cache@v3
+      with:
+        path: ~/tmp/rc-cache
+        key: rc-cache
+
     - name: Install dependencies
       run: |
         python3 -m pip install wheel
@@ -35,3 +40,15 @@ jobs:
       run: python -m rankingbot
       env:
         RANKINGBOT_PASSWORD: ${{ secrets.RANKINGBOT_PASSWORD }}
+
+    - name: Remove old rc caches
+      env:
+        # 보존할 바뀐글 캐시 일수. 30일까지 계산할 것이므로 30개만 있으면 되는데 혹시 모르니 여유를 둬서 35개 유지
+        TIME_WINDOW: 35
+      run: |
+        OLDS=$(ls -t tmp/rc-cache | tail -n +${{ env.TIME_WINDOW }})
+
+        for OLD in "$OLDS"; do
+          [ -d "tmp/rc-cache/$OLD" ] && continue
+          rm "tmp/rc-cache/$OLD"
+        done
