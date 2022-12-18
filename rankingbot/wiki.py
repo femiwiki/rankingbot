@@ -3,6 +3,7 @@ import logging
 import pathlib
 from datetime import timedelta
 from os import path
+from time import sleep
 
 import mwclient
 
@@ -25,6 +26,7 @@ class Wiki:
 
         self._site.login(self._user, self._pw)
         self._loggedin = True
+        logger.info('Logged in')
 
     def load(self, pagename):
         self.login()
@@ -95,6 +97,7 @@ class Wiki:
             else:
                 rccontinue = result['continue']['rccontinue']
 
+        sleep(5)
         return changes
 
     def userid_to_name(self, id):

@@ -3,7 +3,6 @@ import datetime
 import logging
 import collections
 from os import environ
-from time import sleep
 
 from .wiki import Wiki
 
@@ -35,7 +34,6 @@ def main():
     counts_by_dates = []
     for date in dates:
         counts_by_dates.append((date, count_for_a_day(wiki.get_recent_changes(date))))
-        sleep(5)
 
     # Get top rankers
     p_exclude = r'.*(\[\[분류\:활동적인 사용자 집계에서 제외할 사용자\]\]).*'
