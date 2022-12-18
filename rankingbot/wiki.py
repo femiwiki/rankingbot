@@ -62,7 +62,7 @@ class Wiki:
         filename = path.join(self._tempdir, 'rc-cache', date.strftime('%Y%m%d'))
         if not path.isfile(filename):
             entries = self._fetch_recent_changes(date)
-            pathlib.Path(self._tempdir).mkdir(parents=True, exist_ok=True)
+            pathlib.Path(path.join(self._tempdir, 'rc-cache')).mkdir(parents=True, exist_ok=True)
             with open(filename, 'w') as f:
                 self._to_csv(f, entries, headers)
         with open(filename, 'r') as f:
