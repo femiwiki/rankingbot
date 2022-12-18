@@ -57,7 +57,7 @@ class Wiki:
     def get_recent_changes(self, date):
         headers = ['timestamp', 'userid', 'type', 'title']
 
-        filename = path.join(self._tempdir, date.strftime('%Y%m%d'))
+        filename = path.join(self._tempdir, 'rc-cache', date.strftime('%Y%m%d'))
         if not path.isfile(filename):
             entries = self._fetch_recent_changes(date)
             pathlib.Path(self._tempdir).mkdir(parents=True, exist_ok=True)
