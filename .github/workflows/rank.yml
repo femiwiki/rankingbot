@@ -4,6 +4,12 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron: '0 20 * * *'
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        type: boolean
+        description: Do not publish the result on Femiwiki and only print internally.
+        default: false
 
 jobs:
   Update:
@@ -40,6 +46,7 @@ jobs:
       run: python -m rankingbot
       env:
         RANKINGBOT_PASSWORD: ${{ secrets.RANKINGBOT_PASSWORD }}
+        BOT_TEST: ${{ github.event.inputs.dry-run }}
 
     - name: Remove old rc caches
       env:
