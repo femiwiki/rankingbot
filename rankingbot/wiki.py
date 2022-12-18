@@ -3,6 +3,7 @@ import logging
 import pathlib
 from datetime import timedelta
 from os import path
+from time import sleep
 
 import mwclient
 
@@ -25,6 +26,7 @@ class Wiki:
 
         self._site.login(self._user, self._pw)
         self._loggedin = True
+        logger.info('Logged in')
 
     def load(self, pagename):
         self.login()
@@ -57,7 +59,7 @@ class Wiki:
     def get_recent_changes(self, date):
         headers = ['timestamp', 'userid', 'type', 'title']
 
-        filename = path.join(self._tempdir, date.strftime('%Y%m%d'))
+        filename = path.join(self._tempdir, 'rc-cache', date.strftime('%Y%m%d'))
         if not path.isfile(filename):
             entries = self._fetch_recent_changes(date)
             pathlib.Path(self._tempdir).mkdir(parents=True, exist_ok=True)
@@ -95,6 +97,7 @@ class Wiki:
             else:
                 rccontinue = result['continue']['rccontinue']
 
+        sleep(5)
         return changes
 
     def userid_to_name(self, id):
