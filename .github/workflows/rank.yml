@@ -55,6 +55,7 @@ jobs:
       run: |
         OLDS=$(ls -t tmp/rc-cache | tail -n +${{ env.TIME_WINDOW }})
 
+        IFS=$'\n\t'
         for OLD in "$OLDS"; do
           [ -d "tmp/rc-cache/$OLD" ] && continue
           rm "tmp/rc-cache/$OLD"
