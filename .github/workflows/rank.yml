@@ -57,6 +57,6 @@ jobs:
 
         IFS=$'\n\t'
         for OLD in "$OLDS"; do
-          [ -d "tmp/rc-cache/$OLD" ] && continue
-          rm "tmp/rc-cache/$OLD"
+          [ -f "tmp/rc-cache/$OLD" ] && rm "tmp/rc-cache/$OLD"
         done
+        ls tmp/rc-cache
