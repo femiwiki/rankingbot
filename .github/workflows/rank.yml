@@ -33,7 +33,7 @@ jobs:
     - uses: actions/cache@v3
       with:
         path: tmp/rc-cache
-        key: rc-cache-${{ hashFiles('tmp/rc-cache') }}
+        key: rc-cache
 
     - name: Install dependencies
       run: |
