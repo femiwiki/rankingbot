@@ -54,9 +54,12 @@ jobs:
         TIME_WINDOW: 35
       run: |
         OLDS=$(ls -t tmp/rc-cache | tail -n +${{ env.TIME_WINDOW }})
+        echo 'Old files:'
+        echo $OLDS
 
         IFS=$'\n\t'
         for OLD in "$OLDS"; do
           [ -f "tmp/rc-cache/$OLD" ] && rm "tmp/rc-cache/$OLD"
         done
+        echo 'Cached files:'
         ls tmp/rc-cache
