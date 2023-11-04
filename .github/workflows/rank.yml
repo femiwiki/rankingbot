@@ -29,12 +29,10 @@ jobs:
         path: tmp/rc-cache
         key: rc-cache
 
-    - name: Install dependencies
-      run: |
-        python3 -m pip install wheel
-        python setup.py bdist_wheel
-        python3 -m pip install -r requirements.txt
-        python3 -m pip install dist/rankingbot-*.whl
+    - run: python3 -m pip install wheel
+    - run: python setup.py bdist_wheel
+    - run: python3 -m pip install -r requirements.txt
+    - run: python3 -m pip install dist/rankingbot-*.whl
 
     - name: Update
       run: python -m rankingbot
