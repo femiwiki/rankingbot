@@ -29,7 +29,6 @@ jobs:
         path: tmp/rc-cache
         key: rc-cache
 
-    - run: python3 -m pip install wheel
     - run: python setup.py bdist_wheel
     - run: python3 -m pip install -r requirements.txt
     - run: python3 -m pip install dist/rankingbot-*.whl
