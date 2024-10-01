@@ -1,4 +1,4 @@
-certifi==2024.7.4
+certifi==2024.8.30
 chardet==5.2.0
 idna==3.8
 mwclient==0.10.1
