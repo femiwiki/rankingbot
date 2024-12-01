@@ -8,4 +8,4 @@ requests==2.31.0
 setuptools==72.1.0
 six==1.16.0
 urllib3==2.2.3
-wheel==0.44.0
+wheel==0.45.1
