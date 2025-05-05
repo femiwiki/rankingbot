@@ -63,9 +63,9 @@ class Wiki:
         if not path.isfile(filename):
             entries = self._fetch_recent_changes(date)
             pathlib.Path(path.join(self._tempdir, 'rc-cache')).mkdir(parents=True, exist_ok=True)
-            with open(filename, 'w') as f:
+            with open(filename, 'w', encoding='utf-8') as f:
                 self._to_csv(f, entries, headers)
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             # Skip header
             f.readline()
 

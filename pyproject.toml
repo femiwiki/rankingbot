@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools >= 72.1.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rankingbot"
+version = "0.0.0"
+dependencies = [
+  "requests==2.31.0",
+  "mwclient==0.11.0",
+]
+
+[dependency-groups]
+dev = [
+  "flake8",
+  "pytest",
+  "pytest-cov",
+]
+
+[project.scripts]
+rankingbot = "rankingbot:main"
+
+[tool.setuptools.packages.find]
+exclude = ["tmp"]
