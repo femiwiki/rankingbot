@@ -5,34 +5,21 @@ them on the front page of the [Femiwiki].
 
 You have to grant [`(protect)`] permission to the bot.
 
-&nbsp;
-
 Development
 --------
 ```bash
-# Setup venv first
-# python -m venv .venv
-# source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-pip install --editable .
-
 # Run
 export RANKINGBOT_PASSWORD=xxxxxxxx
-python -m rankingbot
+uv run rankingbot
 
 # Test
-pip install pytest
-pytest
+uv run pytest
 
 # Lint
-pip install flake8
-flake8
+uv run flake8
 
 # Packaging
-pip install wheel
-python setup.py sdist bdist_wheel
+uv build
 ```
 
 &nbsp;
