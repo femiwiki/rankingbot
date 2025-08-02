@@ -42,13 +42,13 @@ jobs:
         # 보존할 바뀐글 캐시 일수. 30일까지 계산할 것이므로 30개만 있으면 되는데 혹시 모르니 여유를 둬서 35개 유지
         TIME_WINDOW: 35
       run: |
-        OLDS=$(ls -t tmp/rc-cache | tail -n +${{ env.TIME_WINDOW }})
+        OLDS=$(ls -t tmp/rc-cache | tail -n +${{ env.TIME_WINDOW }} | tr $'\n' "\n")
         echo 'Old files:'
         echo $OLDS
 
-        IFS=$'\n\t'
         for OLD in "$OLDS"; do
-          [ -f "tmp/rc-cache/$OLD" ] && rm "tmp/rc-cache/$OLD"
+          [ -d tmp/rc-cache/"${OLD}" ] && continue
+          rm tmp/rc-cache/"${OLD}"
         done
         echo 'Cached files:'
         ls tmp/rc-cache
