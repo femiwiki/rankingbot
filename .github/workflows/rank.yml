@@ -30,7 +30,10 @@ jobs:
     - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: tmp/rc-cache
-        key: rc-cache
+        # 키가 고정되어 있으면 최초 저장 이후 캐시가 갱신되지 않으므로 실행마다 새 키로 저장한다
+        key: rc-cache-${{ github.run_id }}
+        restore-keys: |
+          rc-cache-
 
     - name: Install uv
       uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
@@ -46,13 +49,10 @@ jobs:
         # 보존할 바뀐글 캐시 일수. 30일까지 계산할 것이므로 30개만 있으면 되는데 혹시 모르니 여유를 둬서 35개 유지
         TIME_WINDOW: 35
       run: |
-        OLDS=$(ls -t tmp/rc-cache | tail -n +${{ env.TIME_WINDOW }})
         echo 'Old files:'
-        echo $OLDS
+        ls -t tmp/rc-cache | tail -n "+$((TIME_WINDOW + 1))"
 
-        IFS=$'\n\t'
-        for OLD in "$OLDS"; do
-          [ -f "tmp/rc-cache/$OLD" ] && rm "tmp/rc-cache/$OLD"
-        done
+        ls -t tmp/rc-cache | tail -n "+$((TIME_WINDOW + 1))" | xargs -r -I{} rm -- 'tmp/rc-cache/{}'
+
         echo 'Cached files:'
         ls tmp/rc-cache
