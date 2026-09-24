@@ -22,3 +22,6 @@ rankingbot = "rankingbot:main"
 
 [tool.setuptools.packages.find]
 exclude = ["tmp"]
+
+[tool.ruff]
+line-length = 120

@@ -18,41 +18,41 @@ jobs:
       contents: read
     steps:
 
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      with:
-        persist-credentials: false
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
-    - name: Set up Python
-      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-      with:
-        python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.x'
 
-    - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: tmp/rc-cache
-        # 키가 고정되어 있으면 최초 저장 이후 캐시가 갱신되지 않으므로 실행마다 새 키로 저장한다
-        key: rc-cache-${{ github.run_id }}
-        restore-keys: |
-          rc-cache-
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: tmp/rc-cache
+          # 키가 고정되어 있으면 최초 저장 이후 캐시가 갱신되지 않으므로 실행마다 새 키로 저장한다
+          key: rc-cache-${{ github.run_id }}
+          restore-keys: |
+            rc-cache-
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      - name: Install uv
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
 
-    - name: Update
-      run: uv run --locked rankingbot
-      env:
-        RANKINGBOT_PASSWORD: ${{ secrets.RANKINGBOT_PASSWORD }}
-        BOT_TEST: ${{ github.event.inputs.dry-run }}
+      - name: Update
+        run: uv run --locked rankingbot
+        env:
+          RANKINGBOT_PASSWORD: ${{ secrets.RANKINGBOT_PASSWORD }}
+          BOT_TEST: ${{ github.event.inputs.dry-run }}
 
-    - name: Remove old rc caches
-      env:
-        # 보존할 바뀐글 캐시 일수. 30일까지 계산할 것이므로 30개만 있으면 되는데 혹시 모르니 여유를 둬서 35개 유지
-        TIME_WINDOW: 35
-      run: |
-        echo 'Old files:'
-        ls -t tmp/rc-cache | tail -n "+$((TIME_WINDOW + 1))"
+      - name: Remove old rc caches
+        env:
+          # 보존할 바뀐글 캐시 일수. 30일까지 계산할 것이므로 30개만 있으면 되는데 혹시 모르니 여유를 둬서 35개 유지
+          TIME_WINDOW: 35
+        run: |
+          echo 'Old files:'
+          ls -t tmp/rc-cache | tail -n "+$((TIME_WINDOW + 1))"
 
-        ls -t tmp/rc-cache | tail -n "+$((TIME_WINDOW + 1))" | xargs -r -I{} rm -- 'tmp/rc-cache/{}'
+          ls -t tmp/rc-cache | tail -n "+$((TIME_WINDOW + 1))" | xargs -r -I{} rm -- 'tmp/rc-cache/{}'
 
-        echo 'Cached files:'
-        ls tmp/rc-cache
+          echo 'Cached files:'
+          ls tmp/rc-cache
