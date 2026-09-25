@@ -1,5 +1,6 @@
 [rankingbot] [![Github checks status]][github checks link] [![codecov.io status]][codecov.io link]
 ========
+
 A bot that calculates the rankings of users with high contributions and displays
 them on the front page of the [Femiwiki].
 
@@ -7,6 +8,7 @@ You have to grant [`(protect)`] permission to the bot.
 
 Development
 --------
+
 ```bash
 # Run
 export RANKINGBOT_PASSWORD=xxxxxxxx
