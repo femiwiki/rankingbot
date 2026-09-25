@@ -1,14 +1,14 @@
-from datetime import datetime
+from datetime import date
 
 from rankingbot import enumerate_dates, count_for_a_day, exponential_smoothing
 
 
 def test_enumerate_dates():
-    today = datetime(2017, 5, 10)
+    today = date(2017, 5, 10)
     expected = [
-        datetime(2017, 5, 7),
-        datetime(2017, 5, 8),
-        datetime(2017, 5, 9),
+        date(2017, 5, 7),
+        date(2017, 5, 8),
+        date(2017, 5, 9),
     ]
     actual = enumerate_dates(today, 3)
     assert expected == actual
@@ -50,14 +50,14 @@ def test_count_for_a_day():
 def test_exponential_smoothing():
     counts = [
         (
-            datetime(2017, 5, 7),
+            date(2017, 5, 7),
             (
                 ('A', 2.0),
                 ('B', 3.0),
             )
         ),
         (
-            datetime(2017, 5, 8),
+            date(2017, 5, 8),
             (
                 ('B', 2.0),
             )
