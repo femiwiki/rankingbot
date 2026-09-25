@@ -12,7 +12,6 @@ requires-python = ">= 3.12"
 
 [dependency-groups]
 dev = [
-  "flake8",
   "pytest",
   "pytest-cov",
 ]
@@ -25,3 +24,7 @@ exclude = ["tmp"]
 
 [tool.ruff]
 line-length = 120
+
+[tool.ruff.lint]
+# flake8 ran all of pycodestyle, which ruff leaves off by default.
+extend-select = ["E", "W"]
