@@ -44,7 +44,7 @@ def main():
         (score, user) for score, user in scores
         if user != '' and int(user) not in blocked_users and not re.match(
             p_exclude,
-            wiki.load('사용자:%s' % wiki.userid_to_name(user)),
+            wiki.load(f'사용자:{wiki.userid_to_name(user)}'),
             re.DOTALL + re.MULTILINE,
         )
     )
@@ -56,8 +56,7 @@ def main():
         name = wiki.userid_to_name(user)
 
         template.append('|-')
-        template.append(
-            '| %d || [[특수:기여/%s|%s]] ' % (i + 1, name, name))
+        template.append(f'| {i + 1} || [[특수:기여/{name}|{name}]] ')
 
     # Update the page
     wiki.save(
