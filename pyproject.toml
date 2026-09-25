@@ -16,7 +16,6 @@ dev = [
   "pytest-cov",
 ]
 lint = [
-  "rumdl==0.2.77",
   "ruff==0.16.5",
   "yamllint==1.38.0",
 ]
