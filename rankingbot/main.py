@@ -28,7 +28,7 @@ def main():
     )
 
     # Calculate score
-    today = datetime.datetime.today().date()
+    today = datetime.datetime.now().astimezone().date()
     dates = enumerate_dates(today, TIME_WINDOW)
 
     counts_by_dates = []
