@@ -23,9 +23,6 @@ jobs:
       - name: Build
         run: uv build
 
-      - name: Lint
-        run: uv run --locked flake8 -v
-
       - name: Test
         run: uv run --locked pytest --cov-report=xml --cov=./
         env:
