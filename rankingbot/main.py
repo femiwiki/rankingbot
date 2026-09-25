@@ -1,7 +1,7 @@
-import re
+import collections
 import datetime
 import logging
-import collections
+import re
 from os import environ
 
 from .wiki import Wiki
@@ -28,7 +28,7 @@ def main():
     )
 
     # Calculate score
-    today = datetime.datetime.today().date()
+    today = datetime.datetime.now().astimezone().date()
     dates = enumerate_dates(today, TIME_WINDOW)
 
     counts_by_dates = []
@@ -44,7 +44,7 @@ def main():
         (score, user) for score, user in scores
         if user != '' and int(user) not in blocked_users and not re.match(
             p_exclude,
-            wiki.load('사용자:%s' % wiki.userid_to_name(user)),
+            wiki.load(f'사용자:{wiki.userid_to_name(user)}'),
             re.DOTALL + re.MULTILINE,
         )
     )
@@ -56,8 +56,7 @@ def main():
         name = wiki.userid_to_name(user)
 
         template.append('|-')
-        template.append(
-            '| %d || [[특수:기여/%s|%s]] ' % (i + 1, name, name))
+        template.append(f'| {i + 1} || [[특수:기여/{name}|{name}]] ')
 
     # Update the page
     wiki.save(
@@ -84,12 +83,12 @@ def exponential_smoothing(counts_by_dates, smooth_factor):
     # Initialize score for all users
     scores = {}
     for _, counts in counts_by_dates:
-        scores.update(dict((user, 0) for user, _ in counts))
+        scores.update({user: 0 for user, _ in counts})
 
     # Calculate average count using exponential smoothing
     all_users = set(scores.keys())
     for date, counts in counts_by_dates:
-        active_users = set(user for user, _ in counts)
+        active_users = {user for user, _ in counts}
         inactive_users = all_users.difference(active_users)
         for user, freq in counts:
             scores[user] = (

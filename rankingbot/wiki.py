@@ -47,8 +47,8 @@ class Wiki:
 
     def save(self, pagename, content, summary):
         if self._prevent_save:
-            print('Updating page: %s' % pagename)
-            print('Summary: %s' % summary)
+            print(f'Updating page: {pagename}')
+            print(f'Summary: {summary}')
             print('Content:\n')
             print(content)
         else:
