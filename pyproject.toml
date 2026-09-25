@@ -15,6 +15,9 @@ dev = [
   "pytest",
   "pytest-cov",
 ]
+lint = [
+  "yamllint==1.38.0",
+]
 
 [project.scripts]
 rankingbot = "rankingbot:main"
