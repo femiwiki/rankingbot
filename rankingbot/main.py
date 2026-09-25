@@ -83,12 +83,12 @@ def exponential_smoothing(counts_by_dates, smooth_factor):
     # Initialize score for all users
     scores = {}
     for _, counts in counts_by_dates:
-        scores.update(dict((user, 0) for user, _ in counts))
+        scores.update({user: 0 for user, _ in counts})
 
     # Calculate average count using exponential smoothing
     all_users = set(scores.keys())
     for date, counts in counts_by_dates:
-        active_users = set(user for user, _ in counts)
+        active_users = {user for user, _ in counts}
         inactive_users = all_users.difference(active_users)
         for user, freq in counts:
             scores[user] = (
