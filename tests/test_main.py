@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from rankingbot import enumerate_dates, count_for_a_day, exponential_smoothing
+from rankingbot import count_for_a_day, enumerate_dates, exponential_smoothing
 
 
 def test_enumerate_dates():

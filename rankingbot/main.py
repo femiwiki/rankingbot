@@ -1,7 +1,7 @@
-import re
+import collections
 import datetime
 import logging
-import collections
+import re
 from os import environ
 
 from .wiki import Wiki
