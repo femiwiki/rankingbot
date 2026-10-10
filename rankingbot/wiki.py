@@ -57,10 +57,10 @@ class Wiki:
             page.save(content, summary)
 
     def get_recent_changes(self, date):
-        headers = ["timestamp", "userid", "type", "title"]
+        headers = ["timestamp", "userid", "type", "title", "ns"]
 
         filename = path.join(self._tempdir, "rc-cache", date.strftime("%Y%m%d"))
-        if not path.isfile(filename):
+        if not self._has_header(filename, headers):
             entries = self._fetch_recent_changes(date)
             pathlib.Path(path.join(self._tempdir, "rc-cache")).mkdir(parents=True, exist_ok=True)
             with open(filename, "w", encoding="utf-8") as f:
@@ -103,6 +103,13 @@ class Wiki:
     def userid_to_name(self, id):
         result = self._site.api("query", list="users", ususerids=id)
         return result["query"]["users"][0]["name"]
+
+    @staticmethod
+    def _has_header(filename, headers):
+        if not path.isfile(filename):
+            return False
+        with open(filename, "r", encoding="utf-8") as f:
+            return next(csv.reader(f), None) == headers
 
     @staticmethod
     def _to_csv(f, entries, fieldnames):
