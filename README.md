@@ -2,7 +2,8 @@
 ========
 
 A bot that calculates the rankings of users with high contributions and displays
-them on the front page of the [Femiwiki].
+them on the front page of the [Femiwiki]. Only edits to content namespaces
+(the main namespace on Femiwiki) count; talk and user pages do not.
 
 You have to grant [`(protect)`] permission to the bot.
 

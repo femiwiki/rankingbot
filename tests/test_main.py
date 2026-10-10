@@ -16,12 +16,15 @@ def test_enumerate_dates():
 
 def test_count_for_a_day():
     changes = [
-        {"timestamp": "2017-05-08T00:00:00Z", "userid": "1", "user": "A", "type": "edit", "title": "blah"},
-        {"timestamp": "2017-05-08T00:00:00Z", "userid": "1", "user": "A", "type": "edit", "title": "blah"},
-        {"timestamp": "2017-05-08T00:00:00Z", "userid": "2", "user": "B", "type": "edit", "title": "blah"},
+        {"timestamp": "2017-05-08T00:00:00Z", "userid": "1", "type": "edit", "title": "blah", "ns": "0"},
+        {"timestamp": "2017-05-08T00:00:00Z", "userid": "1", "type": "edit", "title": "blah", "ns": "0"},
+        {"timestamp": "2017-05-08T00:00:00Z", "userid": "2", "type": "edit", "title": "blah", "ns": "0"},
+        {"timestamp": "2017-05-08T00:00:00Z", "userid": "2", "type": "edit", "title": "토론:blah", "ns": "1"},
+        {"timestamp": "2017-05-08T00:00:00Z", "userid": "2", "type": "edit", "title": "사용자:B", "ns": "2"},
+        {"timestamp": "2017-05-08T00:00:00Z", "userid": "3", "type": "edit", "title": "사용자토론:A", "ns": "3"},
     ]
 
-    actual = count_for_a_day(changes)
+    actual = count_for_a_day(changes, {0})
     expected = [
         ("1", 2.0),
         ("2", 1.0),
