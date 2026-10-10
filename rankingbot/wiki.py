@@ -45,6 +45,10 @@ class Wiki:
 
         return result["query"]["blocks"]
 
+    def get_content_namespaces(self):
+        result = self._site.api("query", meta="siteinfo", siprop="namespaces")
+        return {ns["id"] for ns in result["query"]["namespaces"].values() if "content" in ns}
+
     def save(self, pagename, content, summary):
         if self._prevent_save:
             print(f"Updating page: {pagename}")

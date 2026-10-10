@@ -31,9 +31,10 @@ def main():
     today = datetime.datetime.now().astimezone().date()
     dates = enumerate_dates(today, TIME_WINDOW)
 
+    content_namespaces = wiki.get_content_namespaces()
     counts_by_dates = []
     for date in dates:
-        counts_by_dates.append((date, count_for_a_day(wiki.get_recent_changes(date))))
+        counts_by_dates.append((date, count_for_a_day(wiki.get_recent_changes(date), content_namespaces)))
 
     # Get top rankers
     p_exclude = r".*(\[\[분류\:활동적인 사용자 집계에서 제외할 사용자\]\]).*"
@@ -70,8 +71,8 @@ def enumerate_dates(today, window):
     return [today - datetime.timedelta(days=i) for i in range(window, 0, -1)]
 
 
-def count_for_a_day(changes):
-    counter = collections.Counter(c["userid"] for c in changes)
+def count_for_a_day(changes, namespaces):
+    counter = collections.Counter(c["userid"] for c in changes if int(c["ns"]) in namespaces)
     edits = [(user, freq) for user, freq in counter.items()]
     return sorted(edits, key=lambda row: row[1], reverse=True)
 
