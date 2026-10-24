@@ -1,3 +1,4 @@
+import argparse
 import collections
 import datetime
 import logging
@@ -13,11 +14,26 @@ TOP_N = 15
 SMOOTH_FACTOR = 0.1
 DEBUG = environ.get("BOT_TEST", "0") == "1"
 PASSWORD = environ["RANKINGBOT_PASSWORD"] if not DEBUG else ""
+# Caps the bytes a single edit can add to the score, so that one large paste does not dominate the ranking
+BYTES_CAP_PER_EDIT = 2000
+CRITERIA = {
+    "edits": "페미위키:활동적인 사용자/데이터",
+    "bytes": "페미위키:활동적인 사용자/바이트 데이터",
+}
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(prog="rankingbot")
+    parser.add_argument(
+        "--criterion",
+        choices=CRITERIA.keys(),
+        default="edits",
+        help="what to rank users by: the number of edits, or the bytes added (default: edits)",
+    )
+    args = parser.parse_args(argv)
+
     logging.basicConfig(level=logging.INFO)
-    logger.info("Start updating the ranking")
+    logger.info(f"Start updating the ranking by {args.criterion}")
 
     wiki = Wiki(
         "femiwiki.com",
@@ -34,7 +50,12 @@ def main():
     content_namespaces = wiki.get_content_namespaces()
     counts_by_dates = []
     for date in dates:
-        counts_by_dates.append((date, count_for_a_day(wiki.get_recent_changes(date), content_namespaces)))
+        changes = wiki.get_recent_changes(date)
+        if args.criterion == "bytes":
+            counts = sum_bytes_for_a_day(changes, content_namespaces, BYTES_CAP_PER_EDIT)
+        else:
+            counts = count_for_a_day(changes, content_namespaces)
+        counts_by_dates.append((date, counts))
 
     # Get top rankers
     p_exclude = r".*(\[\[분류\:활동적인 사용자 집계에서 제외할 사용자\]\]).*"
@@ -63,7 +84,7 @@ def main():
         template.append(f"| {i + 1} || [[특수:기여/{name}|{name}]] ")
 
     # Update the page
-    wiki.save("페미위키:활동적인 사용자/데이터", "\n".join(template), "활동적인 사용자 갱신")
+    wiki.save(CRITERIA[args.criterion], "\n".join(template), "활동적인 사용자 갱신")
     logger.info("Ranking update successfully finished")
 
 
@@ -75,6 +96,17 @@ def count_for_a_day(changes, namespaces):
     counter = collections.Counter(c["userid"] for c in changes if int(c["ns"]) in namespaces)
     edits = [(user, freq) for user, freq in counter.items()]
     return sorted(edits, key=lambda row: row[1], reverse=True)
+
+
+def sum_bytes_for_a_day(changes, namespaces, cap):
+    # Only added bytes count; an edit that shrinks a page counts as zero rather than negative
+    counter = collections.Counter()
+    for c in changes:
+        if int(c["ns"]) not in namespaces:
+            continue
+        added = int(c["newlen"] or 0) - int(c["oldlen"] or 0)
+        counter[c["userid"]] += min(max(added, 0), cap)
+    return sorted(counter.items(), key=lambda row: row[1], reverse=True)
 
 
 def exponential_smoothing(counts_by_dates, smooth_factor):

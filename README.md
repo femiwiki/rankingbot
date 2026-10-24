@@ -5,6 +5,12 @@ A bot that calculates the rankings of users with high contributions and displays
 them on the front page of the [Femiwiki]. Only edits to content namespaces
 (the main namespace on Femiwiki) count; talk and user pages do not.
 
+By default users are ranked by the number of edits and the result is saved to
+`페미위키:활동적인 사용자/데이터`. With `--criterion bytes`, users are ranked by
+the bytes they added instead (each edit counts up to 2,000 bytes, and edits
+that shrink a page count as zero), and the result is saved to
+`페미위키:활동적인 사용자/바이트 데이터`.
+
 You have to grant [`(protect)`] permission to the bot.
 
 Development
@@ -14,6 +20,7 @@ Development
 # Run
 export RANKINGBOT_PASSWORD=xxxxxxxx
 uv run rankingbot
+uv run rankingbot --criterion bytes
 
 # Test
 uv run pytest
