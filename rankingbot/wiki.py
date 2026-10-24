@@ -61,7 +61,7 @@ class Wiki:
             page.save(content, summary)
 
     def get_recent_changes(self, date):
-        headers = ["timestamp", "userid", "type", "title", "ns"]
+        headers = ["timestamp", "userid", "type", "title", "ns", "oldlen", "newlen"]
 
         filename = path.join(self._tempdir, "rc-cache", date.strftime("%Y%m%d"))
         if not self._has_header(filename, headers):
@@ -88,7 +88,7 @@ class Wiki:
                 list="recentchanges",
                 rctype="edit|new",
                 rcshow="!bot|!anon",
-                rcprop="timestamp|userid|title",
+                rcprop="timestamp|userid|title|sizes",
                 rclimit="max",
                 rcdir="newer",
                 rcstart=date.strftime("%Y%m%d000000"),

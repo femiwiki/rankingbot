@@ -1,6 +1,6 @@
 from datetime import date
 
-from rankingbot import count_for_a_day, enumerate_dates, exponential_smoothing
+from rankingbot import count_for_a_day, enumerate_dates, exponential_smoothing, sum_bytes_for_a_day
 
 
 def test_enumerate_dates():
@@ -28,6 +28,32 @@ def test_count_for_a_day():
     expected = [
         ("1", 2.0),
         ("2", 1.0),
+    ]
+    assert expected == actual
+
+
+def test_sum_bytes_for_a_day():
+    def change(userid, ns, oldlen, newlen):
+        return {"userid": userid, "ns": ns, "oldlen": oldlen, "newlen": newlen}
+
+    changes = [
+        change("1", "0", "100", "300"),
+        # A new page
+        change("1", "0", "0", "500"),
+        # Capped
+        change("2", "0", "0", "10000"),
+        # Shrinking edits count as zero
+        change("2", "0", "500", "100"),
+        change("3", "0", "500", "100"),
+        # Not a content namespace
+        change("4", "1", "0", "1000"),
+    ]
+
+    actual = sum_bytes_for_a_day(changes, {0}, 1000)
+    expected = [
+        ("2", 1000),
+        ("1", 700),
+        ("3", 0),
     ]
     assert expected == actual
 

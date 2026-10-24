@@ -2,11 +2,11 @@ from rankingbot import Wiki
 
 
 def test_has_header(tmp_path):
-    headers = ["timestamp", "userid", "type", "title", "ns"]
+    headers = ["timestamp", "userid", "type", "title", "ns", "oldlen", "newlen"]
     current = tmp_path / "current"
-    current.write_text("timestamp,userid,type,title,ns\n", encoding="utf-8")
+    current.write_text("timestamp,userid,type,title,ns,oldlen,newlen\n", encoding="utf-8")
     old = tmp_path / "old"
-    old.write_text("timestamp,userid,type,title\n", encoding="utf-8")
+    old.write_text("timestamp,userid,type,title,ns\n", encoding="utf-8")
     empty = tmp_path / "empty"
     empty.write_text("", encoding="utf-8")
 
